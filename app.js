@@ -1,6 +1,8 @@
-/* Nº5 Clara | Landing: CTA fixo no telemóvel e exemplos da conversa. O checkout está em checkout.js. */
+/* Nº5 Clara | Landing: CTA fixo, exemplos da conversa e formulário que segue para o pagamento na Stripe. */
 (() => {
   'use strict';
+  /* Payment Link da Stripe da pré-reserva de 27 € (cobra a sério). */
+  const LINK_PRE_RESERVA = 'https://buy.stripe.com/cNi8wRfFv4Cb1fN3DUgrS0a';
   const $ = (selector, root = document) => root.querySelector(selector);
   const page = document.body.dataset.page;
 
@@ -40,6 +42,44 @@
           tab.setAttribute('aria-pressed', String(selected));
         });
       });
+    });
+
+    const form = $('#lead-form');
+    const inputs = {
+      name: $('#lead-name'), email: $('#lead-email'), phone: $('#lead-phone'), consent: $('#consent')
+    };
+    const errors = {
+      name: $('#error-name'), email: $('#error-email'), phone: $('#error-phone'), consent: $('#error-consent')
+    };
+    function setError(field, message) {
+      errors[field].textContent = message;
+      if (inputs[field].type !== 'checkbox') inputs[field].setAttribute('aria-invalid', String(Boolean(message)));
+    }
+    function validate() {
+      Object.keys(errors).forEach(key => setError(key, ''));
+      let valid = true;
+      const name = inputs.name.value.trim().replace(/\s+/g, ' ');
+      const email = inputs.email.value.trim();
+      const phone = inputs.phone.value.trim();
+      const digits = phone.replace(/\D/g, '');
+      if (name.length < 2) { setError('name', 'Introduz o teu nome.'); valid = false; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { setError('email', 'Introduz um email válido.'); valid = false; }
+      if (digits.length < 9 || digits.length > 15) { setError('phone', 'Introduz um número de telefone válido, com indicativo se necessário.'); valid = false; }
+      if (!inputs.consent.checked) { setError('consent', 'É necessário ler e aceitar a informação indicada para continuar.'); valid = false; }
+      return valid ? { nome: name, email, telefone: phone } : null;
+    }
+    form?.addEventListener('submit', event => {
+      event.preventDefault();
+      $('#form-alert').hidden = true;
+      const lead = validate();
+      if (!lead) {
+        const invalid = form.querySelector('[aria-invalid="true"]') || (!inputs.consent.checked && inputs.consent);
+        invalid?.focus();
+        return;
+      }
+      const destino = new URL(LINK_PRE_RESERVA);
+      destino.searchParams.set('prefilled_email', lead.email);
+      window.location.assign(destino.toString());
     });
   }
 })();

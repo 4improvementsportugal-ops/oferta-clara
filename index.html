@@ -17,7 +17,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <script src="app.js" defer></script>
-  <script src="checkout.js" defer></script>
 </head>
 <body data-page="landing">
   <a class="skip-link" href="#conteudo">Saltar para o conteúdo</a>
@@ -173,7 +172,19 @@
             </div>
             <p class="fineprint">O primeiro mês inclui as funcionalidades disponibilizadas na ativação. As capacidades avançadas são lançadas por fases. Entrada prevista a partir de 1 de dezembro de 2026. Custos da Meta e extras são separados.</p>
           </div>
-          <div class="form-card prevenda-form" id="formulario"><div id="checkout-root"><noscript><p>Para reservares a tua vaga, ativa o JavaScript no navegador.</p></noscript></div></div>
+          <div class="form-card" id="formulario">
+            <div class="form-card-head"><span class="eyebrow">GARANTE A TUA VAGA · 27 €</span><h3>Falta só um passo.</h3><p>Deixa os teus dados para continuares para o pagamento.</p></div>
+            <form id="lead-form" novalidate>
+              <div class="form-field"><label for="lead-name">Nome completo <span>*</span></label><input id="lead-name" name="nome" type="text" autocomplete="name" required maxlength="120" placeholder="O teu nome" aria-describedby="error-name"><small class="field-error" id="error-name" aria-live="polite"></small></div>
+              <div class="form-field"><label for="lead-email">Email <span>*</span></label><input id="lead-email" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="180" placeholder="nome@exemplo.pt" aria-describedby="error-email"><small class="field-error" id="error-email" aria-live="polite"></small></div>
+              <div class="form-field"><label for="lead-phone">Telemóvel <span>*</span></label><input id="lead-phone" name="telefone" type="tel" autocomplete="tel" inputmode="tel" required maxlength="24" placeholder="+351 9XX XXX XXX" aria-describedby="error-phone"><small class="field-error" id="error-phone" aria-live="polite"></small></div>
+              <label class="consent"><input type="checkbox" name="consentimento" id="consent" required><span>Li a <a href="privacidade.html" target="_blank" rel="noopener">informação de privacidade</a> e autorizo o tratamento dos meus dados para gerir o pedido de pré-reserva. <strong>*</strong></span></label>
+              <small class="field-error" id="error-consent" aria-live="polite"></small>
+              <p class="form-alert" id="form-alert" role="alert" hidden></p>
+              <button class="btn btn-submit" type="submit">Continuar para o pagamento</button>
+              <p class="safe-note">Sem fidelização. Pagamento seguro na Stripe.</p>
+            </form>
+          </div>
         </div>
 
         <div class="compare-section" id="comparar-planos" aria-labelledby="compare-title">
