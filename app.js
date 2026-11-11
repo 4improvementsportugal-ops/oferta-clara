@@ -82,4 +82,27 @@
       window.location.assign(destino.toString());
     });
   }
+
+  if (page === 'thanks') {
+    const demoReferral = 'https://clara.numerocinco.pt/?ref=DEMO-CLARA';
+    const copy = $('#copy-referral');
+    copy?.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(demoReferral);
+        copy.textContent = 'Ligação de exemplo copiada ✓';
+      } catch (_) {
+        const ta = document.createElement('textarea');
+        ta.value = demoReferral;
+        document.body.appendChild(ta);
+        ta.select();
+        const success = document.execCommand('copy');
+        ta.remove();
+        copy.textContent = success ? 'Ligação de exemplo copiada ✓' : 'Não foi possível copiar neste navegador';
+      }
+    });
+    $('#share-whatsapp')?.addEventListener('click', () => {
+      const message = 'Mensagem de DEMONSTRAÇÃO: conheces a Nº5 Clara? Esta ligação é apenas um exemplo e ainda não permite pré-reservas nem contabiliza indicações: ' + demoReferral;
+      window.open('https://wa.me/?text=' + encodeURIComponent(message), '_blank', 'noopener,noreferrer');
+    });
+  }
 })();
