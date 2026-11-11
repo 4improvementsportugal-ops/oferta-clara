@@ -3,6 +3,36 @@
   'use strict';
   /* Payment Link da Stripe da pré-reserva de 27 € (cobra a sério). */
   const LINK_PRE_RESERVA = 'https://buy.stripe.com/cNi8wRfFv4Cb1fN3DUgrS0a';
+  /* Endereço do webhook de entrada do GoHighLevel (workflow "Inscrição"). Enquanto estiver vazio, a inscrição
+     não é enviada. Não é um segredo: só aceita dados. Nunca ponhas aqui chaves de API. */
+  const WEBHOOK_INSCRICAO = '';
+
+  /* Passa a Clara: cada pessoa tem um código de 6 letras; quem chega por ?ref=CÓDIGO fica com ele guardado 30 dias */
+  const ALFABETO = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const FORMATO = /^[A-HJ-NP-Z2-9]{6}$/;
+  const K_MEU = 'n5-passa-codigo', K_REF = 'n5-passa-ref', VALIDADE_REF = 30 * 24 * 3600 * 1000;
+  const lerLS = k => { try { return window.localStorage.getItem(k); } catch (_) { return null; } };
+  const gravarLS = (k, v) => { try { window.localStorage.setItem(k, v); } catch (_) {} };
+  const normalizar = c => String(c || '').trim().toUpperCase();
+  const codigoValido = c => FORMATO.test(normalizar(c));
+  const novoCodigo = () => Array.from(crypto.getRandomValues(new Uint8Array(6)), b => ALFABETO[b % 32]).join('');
+  function meuCodigo() {
+    const c = lerLS(K_MEU);
+    if (codigoValido(c)) return normalizar(c);
+    const novo = novoCodigo();
+    gravarLS(K_MEU, novo);
+    return novo;
+  }
+  function refGuardado() {
+    try {
+      const r = JSON.parse(lerLS(K_REF) || 'null');
+      return r && codigoValido(r.codigo) && Date.now() - r.em < VALIDADE_REF ? normalizar(r.codigo) : null;
+    } catch (_) { return null; }
+  }
+  try {
+    const r = normalizar(new URLSearchParams(window.location.search).get('ref'));
+    if (codigoValido(r) && r !== normalizar(lerLS(K_MEU))) gravarLS(K_REF, JSON.stringify({ codigo: r, em: Date.now() }));
+  } catch (_) {}
   const $ = (selector, root = document) => root.querySelector(selector);
   const page = document.body.dataset.page;
 
@@ -77,32 +107,22 @@
         invalid?.focus();
         return;
       }
+      const meu = meuCodigo();
+      let ref = refGuardado();
+      if (ref === meu) ref = null;
       const destino = new URL(LINK_PRE_RESERVA);
       destino.searchParams.set('prefilled_email', lead.email);
-      window.location.assign(destino.toString());
-    });
-  }
-
-  if (page === 'thanks') {
-    const demoReferral = 'https://clara.numerocinco.pt/?ref=DEMO-CLARA';
-    const copy = $('#copy-referral');
-    copy?.addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(demoReferral);
-        copy.textContent = 'Ligação de exemplo copiada ✓';
-      } catch (_) {
-        const ta = document.createElement('textarea');
-        ta.value = demoReferral;
-        document.body.appendChild(ta);
-        ta.select();
-        const success = document.execCommand('copy');
-        ta.remove();
-        copy.textContent = success ? 'Ligação de exemplo copiada ✓' : 'Não foi possível copiar neste navegador';
-      }
-    });
-    $('#share-whatsapp')?.addEventListener('click', () => {
-      const message = 'Mensagem de DEMONSTRAÇÃO: conheces a Nº5 Clara? Esta ligação é apenas um exemplo e ainda não permite pré-reservas nem contabiliza indicações: ' + demoReferral;
-      window.open('https://wa.me/?text=' + encodeURIComponent(message), '_blank', 'noopener,noreferrer');
+      if (ref) destino.searchParams.set('client_reference_id', ref);
+      const seguir = () => window.location.assign(destino.toString());
+      if (!WEBHOOK_INSCRICAO) { seguir(); return; }
+      const corpo = new URLSearchParams({ nome: lead.nome, email: lead.email, telefone: lead.telefone, codigo: meu, indicado_por: ref || '', consentimento: 'sim', origem: window.location.href });
+      const botao = form.querySelector('[type="submit"]');
+      if (botao) botao.disabled = true;
+      /* envia para o GHL e segue para a Stripe; se o GHL falhar ou demorar, o pagamento não fica bloqueado */
+      Promise.race([
+        fetch(WEBHOOK_INSCRICAO, { method: 'POST', body: corpo, mode: 'no-cors', keepalive: true }).catch(() => {}),
+        new Promise(r => setTimeout(r, 1500)),
+      ]).then(seguir);
     });
   }
 })();
