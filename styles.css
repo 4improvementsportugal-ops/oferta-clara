@@ -203,3 +203,5 @@
 .demo-tab:focus-visible{outline:3px solid var(--dourado);outline-offset:3px}
 .demo-tabs{gap:12px}
 @media(max-width:600px){.demo-tab{font-size:13px;padding:12px 16px}.demo-tabs{gap:10px}}
+
+.referral-code{margin:12px 0 0;font-size:14px;color:rgba(245,244,240,.8)}.referral-code strong{font-family:"Courier New",monospace;letter-spacing:3px;color:#F5F4F0;font-size:16px}

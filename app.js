@@ -125,4 +125,31 @@
       ]).then(seguir);
     });
   }
+
+  if (page === 'thanks') {
+    /* mostra a ligação pessoal do comprador (o código criado no formulário e enviado ao GHL) */
+    const cod = lerLS(K_MEU);
+    if (codigoValido(cod)) {
+      const codigo = normalizar(cod);
+      const ligacao = window.location.origin + '/?ref=' + codigo;
+      $('#referral-url').textContent = ligacao;
+      $('#referral-code').textContent = codigo;
+      $('#referral-live').hidden = false;
+      $('#referral-fallback').hidden = true;
+      const copy = $('#copy-referral');
+      copy.addEventListener('click', async () => {
+        try { await navigator.clipboard.writeText(ligacao); copy.textContent = 'Ligação copiada ✓'; }
+        catch (_) {
+          const ta = document.createElement('textarea');
+          ta.value = ligacao; document.body.appendChild(ta); ta.select();
+          const ok = document.execCommand('copy'); ta.remove();
+          copy.textContent = ok ? 'Ligação copiada ✓' : 'Não foi possível copiar neste navegador';
+        }
+      });
+      $('#share-whatsapp').addEventListener('click', () => {
+        const msg = 'Conheces a Nº5 Clara? É a assistente comercial dos consultores imobiliários. Se fizeres a pré-reserva pela minha ligação, conta como indicação minha: ' + ligacao;
+        window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank', 'noopener,noreferrer');
+      });
+    }
+  }
 })();
