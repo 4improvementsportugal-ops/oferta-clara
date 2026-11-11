@@ -5,7 +5,7 @@
   const LINK_PRE_RESERVA = 'https://buy.stripe.com/cNi8wRfFv4Cb1fN3DUgrS0a';
   /* Endereço do webhook de entrada do GoHighLevel (workflow "Inscrição"). Enquanto estiver vazio, a inscrição
      não é enviada. Não é um segredo: só aceita dados. Nunca ponhas aqui chaves de API. */
-  const WEBHOOK_INSCRICAO = '';
+  const WEBHOOK_INSCRICAO = 'https://services.leadconnectorhq.com/hooks/edKb7bpIXSA838eQDrMd/webhook-trigger/1f5c83db-509d-4fcc-8668-b96db7415abb';
 
   /* Passa a Clara: cada pessoa tem um código de 6 letras; quem chega por ?ref=CÓDIGO fica com ele guardado 30 dias */
   const ALFABETO = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
