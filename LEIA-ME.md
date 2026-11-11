@@ -4,15 +4,12 @@ Protótipo navegável feito com **HTML + CSS + JavaScript puro**, sem React, bib
 
 ## Estrutura
 
-- `index.html`: página de vendas da pré-reserva, seis secções e formulário (nome, email, telemóvel e aceitação de informação de privacidade).
-- `checkout-simulado.html`: página de checkout fictícia para testar a navegação.
-- `obrigado.html`: confirmação simulada com programa “Passa a Clara”.
-- `privacidade.html`: **placeholder de demonstração**, a substituir antes da publicação.
-- `styles.css`: estilo completo e responsivo, mantendo a paleta oficial.
-- `app.js`: validação do formulário, mini-demo da Clara, simulação e ações de partilha.
-- `assets/`: símbolo SVG oficial, favicon, mascote e imagem de partilha da marca.
-
-**Fontes:** títulos Bricolage Grotesque e corpo Archivo via Google Fonts, com `font-display: swap`. Não inclui ficheiros de fontes.
+- `index.html`: página de vendas da pré-reserva, com o checkout em conversa dentro da secção da oferta.
+- `checkout.js`: checkout em JavaScript puro (porte do site anterior): a Clara pergunta nome, email e telemóvel e depois mostra o passo da pré-reserva, com o pagamento num Payment Link da Stripe.
+- `pre-reserva-confirmada/index.html` + `confirmada.js`: página para onde a Stripe devolve quem pagou.
+- `privacidade.html` e `termos.html`: política de privacidade e termos e condições.
+- `cookies.js`: definições de cookies.
+- `styles.css`, `app.js`, `assets/`: estilo, interações da landing e imagens.
 
 ## Pré-visualizar localmente
 
@@ -24,16 +21,15 @@ python -m http.server 8080
 
 Abrir `http://localhost:8080` no navegador. Também é possível abrir `index.html` diretamente, mas o servidor local reproduz melhor o funcionamento de um site.
 
-## Fluxo de demonstração
+## Fluxo do checkout
 
-1. Na página principal, descer à oferta ou clicar num CTA.
-2. Preencher os campos e confirmar a informação de privacidade.
-3. O formulário valida os dados e coloca-os **apenas em `sessionStorage` no próprio navegador**, passando para `checkout-simulado.html`.
-4. O checkout mostra o resumo e um botão **Simular confirmação**, sem recolher dados de pagamento.
-5. Após o clique, email e telefone são eliminados da sessão e abre `obrigado.html`, com a secção "Passa a Clara".
-6. O código de referenciação é **DEMO-CLARA**. Não há contabilização real de recomendações.
+1. Na oferta, a Clara pergunta o nome, o email e o telemóvel, uma coisa de cada vez.
+2. Segue-se o passo "Último passo: a pré-reserva": total de 27 €, o que se paga mês a mês, aceitação das condições e botão para a Stripe.
+3. A Stripe cobra (MB WAY, Multibanco, cartão, Apple Pay, Google Pay) e devolve a pessoa a `/pre-reserva-confirmada/`.
 
-**Nada é enviado para GHL, n8n, Supabase, outro CRM ou gateway de pagamento.** O protótipo não emite vouchers, não envia emails, não cria reservas e não valida pagamentos.
+O Payment Link em `checkout.js` (`LINK_PRE_RESERVA`) é **real**: o botão de pagamento cobra 27 €.
+
+**Os dados da inscrição não são guardados em servidor.** O site anterior usava Netlify Forms, que não existe no GitHub Pages. Para guardar os contactos, preenche `ENDPOINT_INSCRICAO` em `checkout.js` com um endereço que aceite um POST (`application/x-www-form-urlencoded`).
 
 ## Para colocar em produção
 

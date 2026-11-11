@@ -70,6 +70,91 @@
 .plan-card li.plan-integrations{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;background:#15181D;color:#fff}
 .ai-icons{display:flex;gap:8px;flex:none}.ai-icons svg{display:block}
 
+/* CHECKOUT EM CONVERSA (porte do site anterior) */
+.prevenda-form,.confirmada{--titulo:var(--display);--mono:Arial,Helvetica,sans-serif;--linha-forte:rgba(21,24,29,.22);--dourado-claro:rgba(232,161,60,.16)}
+.prevenda-form{max-width:700px;width:100%}
+.prevenda-form form{display:grid;gap:16px}
+.prevenda-form h3{margin:0;font-size:clamp(30px,3vw,42px)}
+.prevenda-form-sub{color:var(--suave);margin:-8px 0 0;font-size:15px}
+.so-leitores{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.campo{display:grid;gap:6px;font-size:14px;font-weight:600}
+.campo input{font:inherit;font-weight:400;font-size:16px;padding:13px 14px;border-radius:12px;border:1.5px solid var(--linha-forte);background:#fff;color:var(--tinta);transition:border-color .2s,box-shadow .2s}
+.campo input:focus{outline:none;border-color:var(--dourado);box-shadow:0 0 0 4px var(--dourado-claro)}
+.campo small,.erro-solto{color:#A3520F;font-size:13px;font-weight:600;margin:0}
+.campo--erro input{border-color:#C76A1D}
+.prevenda-botao{justify-content:center;width:100%;padding-block:17px;font-size:17px}
+.prevenda-botao:disabled{opacity:.6;cursor:wait}
+.prevenda-form .clara-form{gap:14px}
+.clara-passos{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:-6px}
+.clara-passos .eyebrow{margin:0}
+.clara-voltar{background:none;border:0;padding:6px 2px;cursor:pointer;color:var(--suave);font:inherit;font-size:14px;font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.clara-progresso{height:5px;border-radius:999px;background:var(--linha);overflow:hidden}
+.clara-progresso span{display:block;height:100%;background:var(--dourado);transition:width .3s ease}
+.clara-conversa{display:grid;gap:12px;padding-top:4px}
+.clara-troca{display:grid;gap:8px}
+.clara-fala{display:flex;gap:10px;align-items:flex-start}
+.clara-fala-balao{display:grid;gap:4px;max-width:46ch;padding:12px 16px;border-radius:4px 18px 18px 18px;background:var(--dourado-claro)}
+.clara-fala-balao p{margin:0;font-size:clamp(17px,1.6vw,19px);font-weight:700;line-height:1.35}
+.clara-fala-balao small{font-size:14px;font-weight:500;color:var(--suave)}
+.clara-fala--compacta .clara-fala-balao{padding:8px 12px}
+.clara-fala--compacta .clara-fala-balao p{font-size:14px;font-weight:600;color:var(--suave)}
+.clara-resposta{justify-self:end;max-width:80%;padding:8px 14px;border:0;cursor:pointer;border-radius:18px 18px 4px 18px;background:var(--tinta);color:var(--creme);font:inherit;font-size:15px;font-weight:600;text-align:right;overflow-wrap:anywhere}
+.clara-resposta:hover{opacity:.85}
+.clara-a-escrever{display:inline-flex;gap:4px;padding:7px 2px}
+.clara-a-escrever i{width:7px;height:7px;border-radius:50%;background:var(--dourado);animation:clara-ponto 1s infinite ease-in-out}
+.clara-a-escrever i:nth-child(2){animation-delay:.15s}.clara-a-escrever i:nth-child(3){animation-delay:.3s}
+@keyframes clara-ponto{0%,60%,100%{opacity:.35;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
+@media(prefers-reduced-motion:reduce){.clara-a-escrever i{animation:none;opacity:.7}}
+.clara-campo input{font-size:18px}
+.clara-codigo-abrir{justify-self:start}
+.clara-aviso{margin:0;font-size:13px;line-height:1.5;color:var(--suave)}
+.clara-avatar{position:relative;display:inline-block;flex:none}
+.clara-avatar img{display:block;width:100%;height:100%;border-radius:50%;object-fit:cover;background:var(--dourado);box-shadow:0 0 0 2px var(--tinta)}
+.clara-avatar-faisca{position:absolute;top:-6%;right:-8%;font-size:14px;color:var(--dourado);line-height:1}
+.pre-reserva{display:grid;gap:14px}
+.pre-reserva h3{margin:0}
+.prioridades-feito{margin:0;font-weight:700;color:var(--dourado-escuro)}
+.pre-reserva-resumo{margin:0;display:grid;gap:6px;padding:14px 16px;border-radius:14px;background:var(--tinta);color:var(--creme)}
+.pre-reserva-resumo div{display:flex;justify-content:space-between;gap:12px;font-size:15px}
+.pre-reserva-resumo dt{opacity:.75}
+.pre-reserva-resumo dd{margin:0;font-weight:700;text-align:right}
+.pre-reserva-resumo .pre-reserva-total{font-size:17px}
+.pre-reserva-resumo .pre-reserva-total dd{color:var(--dourado);font-family:var(--titulo);font-size:22px}
+.o-que-pagas{display:grid;gap:8px}
+.o-que-pagas ol{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.o-que-pagas li{display:grid;gap:2px;align-content:start;padding:12px 14px;border-radius:14px;background:rgba(21,24,29,.05)}
+.o-que-pagas small{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dourado-escuro)}
+.o-que-pagas b{font-family:var(--titulo);font-weight:800;font-size:22px;line-height:1.1;letter-spacing:-.02em}
+.o-que-pagas span{font-size:12px;line-height:1.35;color:var(--suave)}
+.o-que-pagas .o-que-pagas-destaque{background:var(--dourado)}
+.o-que-pagas .o-que-pagas-destaque small,.o-que-pagas .o-que-pagas-destaque span{color:rgba(21,24,29,.78)}
+.o-que-pagas-nota{margin:0;font-size:13px;color:var(--suave)}
+.o-que-pagas--compacto b{font-size:18px}
+@media(max-width:600px){.o-que-pagas ol{grid-template-columns:1fr 1fr}}
+.pre-reserva-inclui{margin:0;padding:0 0 0 18px;display:grid;gap:4px;font-size:14px;color:var(--suave)}
+.pre-reserva-metodos{display:flex;flex-wrap:wrap;gap:6px}
+.pre-reserva-metodos span{font-size:12px;font-weight:700;padding:5px 10px;border-radius:999px;border:1px solid rgba(21,24,29,.16);background:#fff}
+.pre-reserva-aceito{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--suave);cursor:pointer}
+.pre-reserva-aceito input{margin-top:2px;accent-color:var(--dourado)}
+.pre-reserva .prevenda-botao{text-align:center;text-decoration:none}
+.pre-reserva .prevenda-botao:disabled{opacity:.45;cursor:not-allowed}
+.pre-reserva-nota{margin:0;font-size:13px;color:var(--suave);text-align:center}
+.pre-reserva-nota--aviso{padding:12px 14px;border-radius:12px;background:rgba(232,161,60,.14);color:var(--tinta);text-align:left;font-size:14px}
+/* página de pré-reserva confirmada */
+.confirmada{min-height:calc(100vh - 150px);display:grid;align-items:center;padding:clamp(40px,6vw,80px) 0}
+.confirmada-caixa{display:grid;gap:28px;justify-items:start;max-width:720px}
+.confirmada-texto{display:grid;gap:16px;justify-items:start}
+.confirmada h1{font-size:clamp(38px,6vw,64px);margin:0}
+.confirmada-texto p:not(.eyebrow){margin:0;font-size:18px;color:rgba(245,244,240,.78);max-width:60ch}
+.confirmada-texto .eyebrow{margin:0;color:var(--dourado)}
+.confirmada-voltar{color:rgba(245,244,240,.72);font-size:15px}
+.confirmada .o-que-pagas{margin:6px 0 14px;text-align:left;width:100%}
+.confirmada .o-que-pagas li:not(.o-que-pagas-destaque){background:rgba(245,244,240,.08)}
+.confirmada .o-que-pagas li:not(.o-que-pagas-destaque) span,.confirmada .o-que-pagas-nota{color:rgba(245,244,240,.72)}
+.confirmada .o-que-pagas li:not(.o-que-pagas-destaque) small{color:var(--dourado)}
+.confirmada .o-que-pagas b{color:var(--creme)}
+.confirmada .o-que-pagas .o-que-pagas-destaque b{color:var(--tinta)}
+
 /* CTA verde, sem ícone */
 .btn{background:#15803D;color:#fff;box-shadow:0 8px 23px rgba(21,128,61,.2)}.btn:hover{background:#166534;box-shadow:0 13px 29px rgba(21,128,61,.28)}.btn-outline{background:transparent}
 .hero-copy .btn{justify-content:center;text-align:center}
