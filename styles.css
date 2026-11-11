@@ -190,3 +190,7 @@
 @media(max-width:600px){.hero .eyebrow.hero-launch{font-size:11px;letter-spacing:.08em;padding:9px 14px}}
 
 .referral-info{margin:0 0 6px;font-size:15px;line-height:1.55;color:rgba(245,244,240,.86)}
+
+/* "Parece-te familiar?" com mais destaque */
+.pain-label{display:inline-block;font:800 15px/1.2 Arial,sans-serif;letter-spacing:.14em;color:#15181D;background:var(--dourado);padding:9px 16px;border-radius:999px;margin-bottom:22px}
+@media(max-width:600px){.pain-label{font-size:13px;padding:8px 14px}}
