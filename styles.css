@@ -194,3 +194,12 @@
 /* "Parece-te familiar?" com mais destaque */
 .pain-label{display:inline-block;font:800 15px/1.2 Arial,sans-serif;letter-spacing:.14em;color:#15181D;background:var(--dourado);padding:9px 16px;border-radius:999px;margin-bottom:22px}
 @media(max-width:600px){.pain-label{font-size:13px;padding:8px 14px}}
+
+/* Botões dos exemplos da conversa: mais claro que se clicam */
+.demo-tab{cursor:pointer;background:#fff;border:1.5px solid rgba(21,24,29,.38);font-size:14px;padding:13px 20px;box-shadow:0 3px 0 rgba(21,24,29,.14),0 8px 18px -8px rgba(21,24,29,.28);transition:transform .15s,box-shadow .15s,background .15s,color .15s}
+.demo-tab:hover{transform:translateY(-2px);box-shadow:0 5px 0 rgba(21,24,29,.16),0 12px 22px -8px rgba(21,24,29,.32)}
+.demo-tab:active{transform:translateY(1px);box-shadow:0 1px 0 rgba(21,24,29,.2)}
+.demo-tab.active{background:var(--tinta);color:#fff;border-color:var(--tinta);box-shadow:0 3px 0 var(--dourado),0 8px 18px -8px rgba(21,24,29,.4)}
+.demo-tab:focus-visible{outline:3px solid var(--dourado);outline-offset:3px}
+.demo-tabs{gap:12px}
+@media(max-width:600px){.demo-tab{font-size:13px;padding:12px 16px}.demo-tabs{gap:10px}}
