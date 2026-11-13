@@ -5,7 +5,7 @@
   const LINK_PRE_RESERVA = 'https://buy.stripe.com/cNi8wRfFv4Cb1fN3DUgrS0a';
   /* Endereço do webhook de entrada do GoHighLevel (workflow "Inscrição"). Enquanto estiver vazio, a inscrição
      não é enviada. Não é um segredo: só aceita dados. Nunca ponhas aqui chaves de API. */
-  const WEBHOOK_INSCRICAO = 'https://services.leadconnectorhq.com/hooks/edKb7bpIXSA838eQDrMd/webhook-trigger/1f5c83db-509d-4fcc-8668-b96db7415abb';
+  const WEBHOOK_INSCRICAO = 'https://services.leadconnectorhq.com/hooks/edKb7bpIXSA838eQDrMd/webhook-trigger/fuo4k7EhouwDloxpHGHn';
 
   /* Passa a Clara: cada pessoa tem um código de 6 letras; quem chega por ?ref=CÓDIGO fica com ele guardado 30 dias */
   const ALFABETO = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -115,13 +115,17 @@
       if (ref) destino.searchParams.set('client_reference_id', ref);
       const seguir = () => window.location.assign(destino.toString());
       if (!WEBHOOK_INSCRICAO) { seguir(); return; }
-      const corpo = new URLSearchParams({ nome: lead.nome, email: lead.email, telefone: lead.telefone, codigo: meu, indicado_por: ref || '', consentimento: 'sim', origem: window.location.href });
+      const eventId = 'lead_' + Date.now() + '_' + meu;
+      const corpo = JSON.stringify({ nome: lead.nome, email: lead.email, telefone: lead.telefone, codigo: meu, indicado_por: ref || '', consentimento: 'sim', origem: window.location.href, event_id: eventId, timestamp: new Date().toISOString() });
       const botao = form.querySelector('[type="submit"]');
       if (botao) botao.disabled = true;
-      /* envia para o GHL e segue para a Stripe; se o GHL falhar ou demorar, o pagamento não fica bloqueado */
+      /* Meta Pixel: Lead (só é enviado com os cookies de marketing aceites, ver pixel.js) */
+      window.N5Pixel?.track('Lead', { content_name: 'Pré-reserva Nº5 Clara' }, { eventID: eventId });
+      /* envia para o GHL (JSON, senão o mapping do gatilho fica vazio) e segue para a Stripe;
+         se o GHL falhar ou demorar, o pagamento não fica bloqueado */
       Promise.race([
-        fetch(WEBHOOK_INSCRICAO, { method: 'POST', body: corpo, mode: 'no-cors', keepalive: true }).catch(() => {}),
-        new Promise(r => setTimeout(r, 1500)),
+        fetch(WEBHOOK_INSCRICAO, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: corpo }).catch(() => {}),
+        new Promise(r => setTimeout(r, 3000)),
       ]).then(seguir);
     });
   }
@@ -129,6 +133,13 @@
   if (page === 'thanks') {
     /* mostra a ligação pessoal do comprador (o código criado no formulário e enviado ao GHL) */
     const cod = lerLS(K_MEU);
+    /* Meta Pixel: Purchase da pré-reserva (27 €), uma vez por navegador e só para quem passou pelo formulário */
+    if (codigoValido(cod) && !lerLS('n5-pixel-purchase')) {
+      document.addEventListener('DOMContentLoaded', () => {
+        window.N5Pixel?.track('Purchase', { value: 27, currency: 'EUR', content_name: 'Pré-reserva Nº5 Clara' }, { eventID: 'purchase_' + normalizar(cod) });
+        gravarLS('n5-pixel-purchase', '1');
+      });
+    }
     if (codigoValido(cod)) {
       const codigo = normalizar(cod);
       const ligacao = window.location.origin + '/?ref=' + codigo;
