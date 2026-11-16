@@ -33,6 +33,21 @@
     const r = normalizar(new URLSearchParams(window.location.search).get('ref'));
     if (codigoValido(r) && r !== normalizar(lerLS(K_MEU))) gravarLS(K_REF, JSON.stringify({ codigo: r, em: Date.now() }));
   } catch (_) {}
+  /* API de Conversões da Meta: a função vive no site do inquérito (Netlify), porque este site não tem servidor.
+     Só é chamada com os cookies de marketing aceites (política de privacidade, ponto 8). */
+  const CAPI_LEAD = 'https://inquerito.clara.numerocinco.pt/.netlify/functions/capi-lead';
+  const marketingAceite = () => { try { return !!(window.N5Cookies && window.N5Cookies.get() && window.N5Cookies.get().marketing); } catch (_) { return false; } };
+  const lerCookie = n => (document.cookie.match('(?:^|;\\s*)' + n + '=([^;]+)') || [])[1] || '';
+  function enviarCapiLead(lead, eventId) {
+    if (!marketingAceite()) return Promise.resolve();
+    const fbclid = new URLSearchParams(window.location.search).get('fbclid');
+    const corpo = JSON.stringify({
+      event_id: eventId, nome: lead.nome, email: lead.email, telefone: lead.telefone, pagina: window.location.href,
+      fbp: lerCookie('_fbp'), fbc: lerCookie('_fbc') || (fbclid ? 'fb.1.' + Date.now() + '.' + fbclid : ''), marketing: '1'
+    });
+    /* text/plain evita o pedido prévio de CORS; keepalive deixa terminar o envio mesmo a mudar de página */
+    return fetch(CAPI_LEAD, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: corpo, keepalive: true }).catch(() => {});
+  }
   const $ = (selector, root = document) => root.querySelector(selector);
   const page = document.body.dataset.page;
 
@@ -124,7 +139,10 @@
       /* envia para o GHL (JSON, senão o mapping do gatilho fica vazio) e segue para a Stripe;
          se o GHL falhar ou demorar, o pagamento não fica bloqueado */
       Promise.race([
-        fetch(WEBHOOK_INSCRICAO, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: corpo }).catch(() => {}),
+        Promise.all([
+          fetch(WEBHOOK_INSCRICAO, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: corpo }).catch(() => {}),
+          enviarCapiLead(lead, eventId),
+        ]),
         new Promise(r => setTimeout(r, 3000)),
       ]).then(seguir);
     });
@@ -133,13 +151,8 @@
   if (page === 'thanks') {
     /* mostra a ligação pessoal do comprador (o código criado no formulário e enviado ao GHL) */
     const cod = lerLS(K_MEU);
-    /* Meta Pixel: Purchase da pré-reserva (27 €), uma vez por navegador e só para quem passou pelo formulário */
-    if (codigoValido(cod) && !lerLS('n5-pixel-purchase')) {
-      document.addEventListener('DOMContentLoaded', () => {
-        window.N5Pixel?.track('Purchase', { value: 27, currency: 'EUR', content_name: 'Pré-reserva Nº5 Clara' }, { eventID: 'purchase_' + normalizar(cod) });
-        gravarLS('n5-pixel-purchase', '1');
-      });
-    }
+    /* A Compra (Purchase) já não é enviada daqui: quem paga por Multibanco chegava a esta página antes de pagar.
+       Passa a ser enviada pelo servidor quando a Stripe confirma o pagamento (função stripe-webhook no site do inquérito). */
     if (codigoValido(cod)) {
       const codigo = normalizar(cod);
       const ligacao = window.location.origin + '/?ref=' + codigo;
