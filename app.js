@@ -2,7 +2,7 @@
 (() => {
   'use strict';
   /* Payment Link da Stripe da pré-reserva de 27 € (cobra a sério). */
-  const LINK_PRE_RESERVA = 'https://buy.stripe.com/cNi8wRfFv4Cb1fN3DUgrS0a';
+  const LINK_PRE_RESERVA = 'https://buy.stripe.com/8x2fZjalbfgP4rZcaqgrS0b';
   /* Endereço do webhook de entrada do GoHighLevel (workflow "Inscrição"). Enquanto estiver vazio, a inscrição
      não é enviada. Não é um segredo: só aceita dados. Nunca ponhas aqui chaves de API. */
   const WEBHOOK_INSCRICAO = 'https://services.leadconnectorhq.com/hooks/edKb7bpIXSA838eQDrMd/webhook-trigger/fuo4k7EhouwDloxpHGHn';
