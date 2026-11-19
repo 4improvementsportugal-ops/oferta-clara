@@ -121,6 +121,7 @@
       if (botao) botao.disabled = true;
       /* Meta Pixel: Lead (só é enviado com os cookies de marketing aceites, ver pixel.js) */
       window.N5Pixel?.track('Lead', { content_name: 'Pré-reserva Nº5 Clara' }, { eventID: eventId });
+      window.N5Posthog?.track('pre_reserva_formulario_enviado', { com_indicacao: !!ref });
       /* envia para o GHL (JSON, senão o mapping do gatilho fica vazio) e segue para a Stripe;
          se o GHL falhar ou demorar, o pagamento não fica bloqueado */
       Promise.race([
@@ -131,6 +132,7 @@
   }
 
   if (page === 'thanks') {
+    document.addEventListener('DOMContentLoaded', () => window.N5Posthog?.track('pre_reserva_pagina_obrigado'));
     /* mostra a ligação pessoal do comprador (o código criado no formulário e enviado ao GHL) */
     const cod = lerLS(K_MEU);
     /* Meta Pixel: Purchase da pré-reserva (27 €), uma vez por navegador e só para quem passou pelo formulário */
